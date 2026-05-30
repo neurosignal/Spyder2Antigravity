@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Antigravity — Crash Course for Spyder Users</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--surface:#1e2330;
+  --border:rgba(255,255,255,0.07);
+  --blue:#4a9eff;--green:#3ddc84;--amber:#ffb84d;
+  --red:#ff6b6b;--purple:#c084fc;--cyan:#67e8f9;
+  --text:#e2e8f4;--text2:#8b95a8;--text3:#4a5568;
+  --font-head:'Syne',sans-serif;--font-body:'Lora',serif;--font-code:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+.page{max-width:980px;margin:0 auto;padding:60px 32px 120px}
+
+/* HEADER */
+.doc-header{text-align:center;padding:80px 0 60px;position:relative}
+.doc-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(74,158,255,0.08) 0%,transparent 70%);pointer-events:none}
+.version-chip{display:inline-block;font-family:var(--font-code);font-size:11px;background:rgba(74,158,255,0.12);color:var(--blue);border:1px solid rgba(74,158,255,0.25);border-radius:4px;padding:3px 10px;letter-spacing:0.06em;margin-bottom:20px}
+.doc-header h1{font-family:var(--font-head);font-size:clamp(36px,5vw,58px);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:16px}
+.hl{color:var(--blue)}.hl2{color:var(--green)}
+.doc-header .subtitle{font-size:16px;color:var(--text2);max-width:560px;margin:0 auto 32px;font-style:italic}
+.meta-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.meta-pill{font-family:var(--font-code);font-size:11px;color:var(--text3);border:1px solid var(--border);border-radius:4px;padding:4px 12px}
+
+/* TOC */
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px 32px;margin-bottom:56px}
+.toc-title{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px}
+.toc a{font-family:var(--font-code);font-size:12px;color:var(--text2);text-decoration:none;padding:5px 8px;border-radius:5px;display:block;transition:all 0.15s}
+.toc a:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.toc a span{color:var(--text3);margin-right:8px}
+
+/* SECTIONS */
+.section{margin-bottom:64px}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.section-num{font-family:var(--font-code);font-size:11px;color:var(--blue);background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.2);border-radius:4px;padding:3px 9px;flex-shrink:0}
+.section-header h2{font-family:var(--font-head);font-size:22px;font-weight:700;letter-spacing:-0.02em}
+.section p{color:var(--text2);margin-bottom:16px;line-height:1.75}
+.section p strong{color:var(--text)}
+h3{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--text);margin:28px 0 12px}
+h3::before{content:'▸ ';color:var(--blue);font-size:12px}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+.tbl th{font-family:var(--font-code);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px;text-align:left;border-bottom:2px solid var(--border)}
+.tbl th:nth-child(1){color:var(--amber)}.tbl th:nth-child(2){color:var(--blue)}.tbl th:nth-child(3){color:var(--green)}
+.tbl td{padding:9px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2);vertical-align:top;line-height:1.5}
+.tbl tr:hover td{background:rgba(255,255,255,0.02)}
+.tbl td:first-child{color:var(--text);font-weight:500}
+.tbl td code,.tbl th code{font-family:var(--font-code);font-size:11px;background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:3px;color:var(--cyan)}
+
+/* CHEATSHEET GRID */
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:20px 0}
+.cheat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.cheat-card-header{padding:10px 16px;font-family:var(--font-code);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--border)}
+.ch-blue{background:rgba(74,158,255,0.08);color:var(--blue)}
+.ch-green{background:rgba(61,220,132,0.08);color:var(--green)}
+.ch-amber{background:rgba(255,184,77,0.08);color:var(--amber)}
+.ch-purple{background:rgba(192,132,252,0.08);color:var(--purple)}
+.ch-cyan{background:rgba(103,232,249,0.08);color:var(--cyan)}
+.ch-red{background:rgba(255,107,107,0.08);color:var(--red)}
+.cheat-card ul{list-style:none;padding:10px 0}
+.cheat-card ul li{padding:5px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:12.5px}
+.cheat-card ul li:last-child{border-bottom:none}
+.cheat-card ul li .desc{color:var(--text2);flex:1}
+.cheat-card ul li kbd{font-family:var(--font-code);font-size:10.5px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:2px 7px;color:var(--text);white-space:nowrap;flex-shrink:0}
+
+/* CODE BLOCKS */
+.cb{background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin:16px 0;overflow:hidden}
+.cb-head{padding:8px 16px;font-family:var(--font-code);font-size:11px;color:var(--text3);border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.cb-head .lang{color:var(--blue);font-weight:600}
+pre{padding:16px 20px;font-family:var(--font-code);font-size:12.5px;color:var(--text2);overflow-x:auto;line-height:1.65}
+.kw{color:var(--purple)}.fn{color:var(--blue)}.str{color:var(--green)}.cm{color:var(--text3);font-style:italic}.num{color:var(--amber)}.cy{color:var(--cyan)}
+
+/* CALLOUTS */
+.callout{border-radius:8px;padding:14px 18px;margin:16px 0;font-size:13.5px;display:flex;gap:12px;align-items:flex-start}
+.callout-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.c-info{background:rgba(74,158,255,0.07);border:1px solid rgba(74,158,255,0.18);color:rgba(180,205,255,0.9)}
+.c-warn{background:rgba(255,184,77,0.07);border:1px solid rgba(255,184,77,0.2);color:rgba(255,220,140,0.9)}
+.c-tip{background:rgba(61,220,132,0.07);border:1px solid rgba(61,220,132,0.2);color:rgba(140,255,190,0.9)}
+.c-danger{background:rgba(255,107,107,0.07);border:1px solid rgba(255,107,107,0.2);color:rgba(255,170,170,0.9)}
+
+/* WORKFLOW */
+.workflow{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.wf-step{display:flex;gap:20px;align-items:flex-start;padding:16px 0;position:relative}
+.wf-step:not(:last-child)::after{content:'';position:absolute;left:18px;top:52px;bottom:-16px;width:1px;background:linear-gradient(to bottom,rgba(74,158,255,0.4),transparent)}
+.wf-num{width:36px;height:36px;border-radius:50%;background:rgba(74,158,255,0.12);border:1px solid rgba(74,158,255,0.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-code);font-size:12px;color:var(--blue);flex-shrink:0;font-weight:600}
+.wf-content h4{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.wf-content p{font-size:13px;color:var(--text2);margin:0;line-height:1.6}
+.wf-content code{font-family:var(--font-code);font-size:11.5px;background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:3px;color:var(--cyan)}
+
+/* MODES */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.mode-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px}
+.mode-name{font-family:var(--font-code);font-size:12px;font-weight:600;margin-bottom:8px}
+.mode-desc{font-size:12.5px;color:var(--text2);line-height:1.55;margin-bottom:10px}
+.mode-use{font-size:11px;color:var(--text3);font-style:italic}
+.m-agent .mode-name{color:var(--green)}.m-agent{border-color:rgba(61,220,132,0.15)}
+.m-review .mode-name{color:var(--amber)}.m-review{border-color:rgba(255,184,77,0.15)}
+.m-assist .mode-name{color:var(--blue)}.m-assist{border-color:rgba(74,158,255,0.2)}
+.badge{display:inline-block;font-size:10px;background:rgba(74,158,255,0.15);color:var(--blue);border-radius:3px;padding:1px 7px;margin-left:6px;vertical-align:middle;font-family:var(--font-code)}
+
+/* MODELS */
+.model-row{display:flex;align-items:center;gap:16px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.model-name{font-family:var(--font-code);font-size:12px;font-weight:600;color:var(--text);min-width:220px}
+.mbadge{font-size:10px;padding:2px 8px;border-radius:3px;font-family:var(--font-code)}
+.mb-default{background:rgba(61,220,132,0.12);color:var(--green);border:1px solid rgba(61,220,132,0.2)}
+.mb-alt{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border)}
+.model-notes{font-size:12px;color:var(--text2)}
+
+/* MIGRATION */
+.mig{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:20px 0}
+.mig-head{padding:12px 20px;font-family:var(--font-head);font-size:13px;font-weight:700;background:rgba(255,184,77,0.06);border-bottom:1px solid var(--border);color:var(--amber);letter-spacing:0.04em}
+.mig table{width:100%;border-collapse:collapse}
+.mig td{padding:9px 16px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+.mig td:first-child{color:var(--amber);font-family:var(--font-code);font-size:11.5px;width:30%}
+.mig td:nth-child(2){color:var(--blue);font-family:var(--font-code);font-size:11.5px;width:30%}
+.mig td:last-child{color:var(--text2);width:40%}
+
+/* PROMPT BOXES */
+.prompt-box{background:var(--bg3);border:1px solid rgba(61,220,132,0.15);border-radius:8px;padding:16px 20px;margin:10px 0}
+.prompt-label{font-family:var(--font-code);font-size:10px;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px}
+.prompt-box p{font-size:13px;color:var(--text);font-style:italic;line-height:1.6;margin:0}
+
+/* PYTHON TIPS */
+.python-tips{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.ptip{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px}
+.ptip h4{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.ptip p{font-size:12.5px;color:var(--text2);line-height:1.6}
+.ptip code{font-family:var(--font-code);font-size:11px;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:3px;color:var(--cyan)}
+
+/* FOOTER */
+.doc-footer{text-align:center;padding:40px 0 0;border-top:1px solid var(--border);margin-top:80px}
+.doc-footer p{font-family:var(--font-code);font-size:11px;color:var(--text3);letter-spacing:0.04em}
+
+@media(max-width:700px){
+  .mode-grid,.python-tips,.cheat-grid{grid-template-columns:1fr}
+  .page{padding:32px 20px 80px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="version-chip">v1.22 · May 2026 · Spyder → Antigravity Migration</div>
+  <h1>Google <span class="hl">Antigravity</span><br>Crash Course <span class="hl2">&amp; Cheatsheet</span></h1>
+  <p class="subtitle">A complete reference for scientists switching from Spyder — tailored for Python / MEG / scientific computing workflows.</p>
+  <div class="meta-row">
+    <span class="meta-pill">Released: Nov 2025</span>
+    <span class="meta-pill">VS Code fork</span>
+    <span class="meta-pill">Gemini 3.1 Pro · Claude Sonnet · GPT-OSS</span>
+    <span class="meta-pill">Free during preview</span>
+    <span class="meta-pill">Windows · macOS · Linux</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <div class="toc-grid">
+    <a href="#s1"><span>01</span>What is Antigravity?</a>
+    <a href="#s2"><span>02</span>Install &amp; First Launch</a>
+    <a href="#s3"><span>03</span>Interface Overview</a>
+    <a href="#s4"><span>04</span>Spyder → Antigravity Map</a>
+    <a href="#s5"><span>05</span>Agent Modes</a>
+    <a href="#s6"><span>06</span>AI Models Available</a>
+    <a href="#s7"><span>07</span>Keyboard Shortcuts</a>
+    <a href="#s8"><span>08</span>Python Setup</a>
+    <a href="#s9"><span>09</span>Agent Prompting Guide</a>
+    <a href="#s10"><span>10</span>Scientific Python Tips</a>
+    <a href="#s11"><span>11</span>Safety &amp; Gotchas</a>
+    <a href="#s12"><span>12</span>Quick Reference</a>
+  </div>
+</div>
+
+<!-- ══ S1 ══ -->
+<div class="section" id="s1">
+  <div class="section-header"><span class="section-num">01</span><h2>What is Google Antigravity?</h2></div>
+  <p>Google Antigravity is an <strong>agent-first IDE</strong> released in public preview November 2025, built as a fork of VS Code and powered primarily by Gemini 3.1 Pro. It is Google's answer to Cursor and AWS Kiro — but with a heavier emphasis on fully autonomous multi-agent workflows. It was built largely by the former Windsurf IDE team acquired by Google in 2025.</p>
+  <p>The name has a double meaning: <code style="font-family:var(--font-code);font-size:12px;color:var(--cyan);background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:3px">import antigravity</code> in Python opens XKCD comic #353 about Python making impossible things effortless.</p>
+
+  <div class="callout c-info"><span class="callout-icon">ℹ</span><span><strong>Key distinction from Cursor/Copilot:</strong> Antigravity agents don't just suggest code — they autonomously open the terminal, install packages, edit multiple files, launch a browser to test your app, observe the result, and self-correct. You assign a <em>goal</em>, not a line of code.</span></div>
+
+  <h3>Two paradigm shifts from Spyder</h3>
+  <p><strong>1. From cells to agents.</strong> In Spyder you run <code style="font-family:var(--font-code);font-size:12px;color:var(--cyan);background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:3px"># %%</code> cells interactively. In Antigravity you describe a task and an agent plans and executes it. You can still run cells — but agents generate, refactor, and explain code far faster.</p>
+  <p><strong>2. From IPython console to Artifacts.</strong> Spyder's variable explorer and console are replaced by the Artifacts panel — a structured log of the agent's reasoning, intermediate outputs, browser screenshots, and task lists. Your execution trace is now a document, not a scrolling terminal.</p>
+</div>
+
+<!-- ══ S2 ══ -->
+<div class="section" id="s2">
+  <div class="section-header"><span class="section-num">02</span><h2>Install &amp; First Launch</h2></div>
+
+  <div class="workflow">
+    <div class="wf-step"><div class="wf-num">1</div><div class="wf-content"><h4>Download the installer</h4><p>Go to <code>antigravity.google</code> → Download for your OS. Requires 8 GB RAM minimum, 16 GB recommended. 64-bit only.</p></div></div>
+    <div class="wf-step"><div class="wf-num">2</div><div class="wf-content"><h4>Run installer → select Start Fresh</h4><p>Choose theme. You can import existing VS Code settings if you have any.</p></div></div>
+    <div class="wf-step"><div class="wf-num">3</div><div class="wf-content"><h4>Choose Agent Manager mode</h4><p>Choose <strong>Agent-Assisted Development</strong> (recommended for scientists). See Section 05 for details.</p></div></div>
+    <div class="wf-step"><div class="wf-num">4</div><div class="wf-content"><h4>Sign in with Google account</h4><p>Free tier: generous rate limits on Gemini 3.1 Pro, refreshed every 5 hours. No credit card during preview.</p></div></div>
+    <div class="wf-step"><div class="wf-num">5</div><div class="wf-content"><h4>Open your project folder</h4><p>File → Open Folder. Antigravity reads your existing <code>.py</code>, <code>requirements.txt</code>, <code>pyproject.toml</code> automatically.</p></div></div>
+    <div class="wf-step"><div class="wf-num">6</div><div class="wf-content"><h4>Set Python interpreter</h4><p>Bottom status bar → click Python version → Select Interpreter → pick your conda/venv. <strong>Do this before your first agent task</strong> or it may install packages in the wrong place.</p></div></div>
+  </div>
+
+  <div class="callout c-warn"><span class="callout-icon">⚠</span><span><strong>Virtual environment gotcha:</strong> The first agent run may ignore your existing venv and install packages globally. Always verify the interpreter is set first. A security researcher flagged a backdoor vulnerability in late Nov 2025; Google is patching — keep Antigravity updated.</span></div>
+</div>
+
+<!-- ══ S3 ══ -->
+<div class="section" id="s3">
+  <div class="section-header"><span class="section-num">03</span><h2>Interface Overview</h2></div>
+
+  <table class="tbl">
+    <thead><tr><th>Panel</th><th>What it does</th><th>Spyder equivalent</th></tr></thead>
+    <tbody>
+      <tr><td>Editor Panel</td><td>Main code editor — inherited from VS Code. Multi-tab, syntax highlighting.</td><td>Editor</td></tr>
+      <tr><td>Agent Sidebar</td><td>Where you talk to the AI. Type your task here. Shows conversation, plan, live progress.</td><td>No equivalent</td></tr>
+      <tr><td>Agent Manager (Manager View)</td><td>Orchestrates multiple parallel agents across workspaces.</td><td>No equivalent</td></tr>
+      <tr><td>Artifacts Panel</td><td>Structured log: plans, task lists, code diffs, browser screenshots.</td><td>IPython console (partial)</td></tr>
+      <tr><td>Terminal</td><td>Integrated bash/zsh. Agents can run commands here automatically or ask permission.</td><td>IPython console</td></tr>
+      <tr><td>Browser Preview</td><td>Built-in Chromium for live app testing. Agents can interact with it.</td><td>No equivalent</td></tr>
+      <tr><td>File Explorer</td><td>Left sidebar — standard VS Code file tree.</td><td>Files pane</td></tr>
+      <tr><td>Problems Panel</td><td>Linting errors, type errors, agent-detected issues aggregated.</td><td>Code Analysis pane</td></tr>
+      <tr><td>Source Control</td><td>Built-in Git — stage, commit, push without leaving the IDE.</td><td>No equivalent</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Editor View vs Manager View</h3>
+  <p><strong>Editor View</strong> is your standard single-project coding environment (use this 90% of the time). <strong>Manager View</strong> is a control centre for running multiple agents in parallel — e.g. one agent refactoring while another writes tests simultaneously.</p>
+</div>
+
+<!-- ══ S4 ══ -->
+<div class="section" id="s4">
+  <div class="section-header"><span class="section-num">04</span><h2>Spyder → Antigravity Feature Map</h2></div>
+
+  <div class="mig">
+    <div class="mig-head">🔶 Spyder Feature → Antigravity Equivalent</div>
+    <table>
+      <tr><td>Run cell (Ctrl+Enter)</td><td>Ctrl+Enter</td><td>Same shortcut works in .py files and notebooks</td></tr>
+      <tr><td>Run file (F5)</td><td>F5</td><td>Identical — runs current file in integrated terminal</td></tr>
+      <tr><td>IPython console</td><td>Integrated Terminal</td><td>Ctrl+` opens terminal. Type python for REPL.</td></tr>
+      <tr><td>Variable Explorer</td><td>Jupyter extension</td><td>Install Jupyter extension — gives variable inspector</td></tr>
+      <tr><td>Plots pane</td><td>Inline plots in .ipynb</td><td>Use %matplotlib inline in notebooks or save to file</td></tr>
+      <tr><td>Code analysis (pylint)</td><td>Problems panel (Pylance)</td><td>Pylance runs continuously — errors show inline</td></tr>
+      <tr><td># %% cell markers</td><td># %% still works</td><td>Python extension fully respects Spyder-style cells</td></tr>
+      <tr><td>Run selection (F9)</td><td>Shift+Enter</td><td>Sends selection to terminal Python REPL</td></tr>
+      <tr><td>Debugger (F12)</td><td>F5 with launch.json</td><td>Needs launch.json setup — see Section 08</td></tr>
+      <tr><td>File switcher</td><td>Ctrl+P</td><td>Fuzzy file finder — much faster than Spyder</td></tr>
+      <tr><td>Find in project</td><td>Ctrl+Shift+F</td><td>Ripgrep-powered — very fast</td></tr>
+      <tr><td>Help / docstring popup</td><td>Hover or Ctrl+K Ctrl+I</td><td>Pylance shows rich docstrings on hover</td></tr>
+      <tr><td>Go to definition</td><td>F12 or Ctrl+Click</td><td>Same as VS Code</td></tr>
+      <tr><td>Outline view</td><td>Ctrl+Shift+O</td><td>Shows all functions/classes — better than Spyder</td></tr>
+      <tr><td>Restart kernel</td><td>Kill + reopen terminal</td><td>Ctrl+C in terminal, then python again</td></tr>
+    </table>
+  </div>
+
+  <div class="callout c-tip"><span class="callout-icon">✦</span><span><strong>Best tip for Spyder users:</strong> Install the <strong>Jupyter extension</strong> immediately (Ctrl+Shift+X → search "Jupyter"). This gives you .ipynb notebooks with a proper variable explorer, inline plots, and cell-by-cell execution — the closest experience to Spyder's interactive workflow.</span></div>
+</div>
+
+<!-- ══ S5 ══ -->
+<div class="section" id="s5">
+  <div class="section-header"><span class="section-num">05</span><h2>Agent Modes</h2></div>
+  <p>The most important configuration choice. Set it during install but change it any time in Settings → Agent Manager Policy.</p>
+
+  <div class="mode-grid">
+    <div class="mode-card m-agent">
+      <div class="mode-name">Agent-Driven</div>
+      <div class="mode-desc">Full autopilot. Agent writes code, runs terminal commands, edits files without asking. Fastest but least control.</div>
+      <div class="mode-use">Use for: scaffolding new projects, one-shot experiments, boilerplate</div>
+    </div>
+    <div class="mode-card m-assist">
+      <div class="mode-name">Agent-Assisted <span class="badge">Recommended</span></div>
+      <div class="mode-desc">You stay in control. Safe automations run automatically; destructive or ambiguous actions ask permission. Best balance.</div>
+      <div class="mode-use">Use for: scientific coding, refactoring, daily development work</div>
+    </div>
+    <div class="mode-card m-review">
+      <div class="mode-name">Review-Driven</div>
+      <div class="mode-desc">Agent asks permission before almost every action. Slowest but maximum oversight.</div>
+      <div class="mode-use">Use for: clinical data pipelines, production code, sensitive work</div>
+    </div>
+  </div>
+
+  <h3>Plan Mode vs Fast Mode (per-task setting)</h3>
+  <table class="tbl">
+    <thead><tr><th>Mode</th><th>What happens</th><th>Best for</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Mode</td><td>Agent generates a full task plan (Plan Artifact) before acting. You can edit the plan before execution starts.</td><td>Multi-file refactoring, new features, complex pipelines</td></tr>
+      <tr><td>Fast Mode</td><td>Executes immediately. No plan artifact. Much faster for simple operations.</td><td>Quick fixes, single-file edits, explaining code</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Terminal Policy</h3>
+  <p>Configure separately: <strong>Auto</strong> (run standard commands freely), <strong>Agent Decides</strong> (agent judges when to ask), or <strong>Always Ask</strong>. For scientific data work, <strong>Agent Decides</strong> is sensible — pip installs run automatically, but destructive commands require confirmation.</p>
+</div>
+
+<!-- ══ S6 ══ -->
+<div class="section" id="s6">
+  <div class="section-header"><span class="section-num">06</span><h2>AI Models Available</h2></div>
+  <p>Switch models mid-conversation from the dropdown in the agent sidebar.</p>
+
+  <div class="model-row"><span class="model-name">Gemini 3.1 Pro (High)</span><span class="mbadge mb-default">Default</span><span class="model-notes">Best for complex multi-file tasks, large context (1M tokens), strong code reasoning. Primary model for all agentic operations.</span></div>
+  <div class="model-row"><span class="model-name">Gemini 3.1 Pro (Low)</span><span class="mbadge mb-alt">Alt</span><span class="model-notes">Faster, lower token cost. Good for quick edits when you've hit rate limits on the High tier.</span></div>
+  <div class="model-row"><span class="model-name">Gemini 3 Flash</span><span class="mbadge mb-alt">Fast</span><span class="model-notes">Very fast, lower quality. Good for boilerplate generation, simple refactoring, quick questions.</span></div>
+  <div class="model-row"><span class="model-name">Claude Sonnet 4.5</span><span class="mbadge mb-alt">Alt</span><span class="model-notes">Strong for scientific Python, nuanced reasoning, documentation. Switch here if Gemini misunderstands domain-specific tasks (e.g. MNE/MEG).</span></div>
+  <div class="model-row"><span class="model-name">Claude Sonnet 4.5 (Thinking)</span><span class="mbadge mb-alt">Reasoning</span><span class="model-notes">Extended thinking mode. Best for complex algorithm design, debugging hard logic errors. Slower but more thorough.</span></div>
+  <div class="model-row"><span class="model-name">GPT-OSS 120B Medium</span><span class="mbadge mb-alt">Open</span><span class="model-notes">Open-source option. Useful if you prefer not to use proprietary models for sensitive data.</span></div>
+
+  <div class="callout c-info"><span class="callout-icon">ℹ</span><span><strong>Rate limits:</strong> All models are free during preview with limits refreshed every 5 hours. Heavy use will exhaust Gemini 3.1 Pro limits — switch to Flash or Claude Sonnet to continue. Bring-your-own-API-key is not yet supported.</span></div>
+</div>
+
+<!-- ══ S7 ══ -->
+<div class="section" id="s7">
+  <div class="section-header"><span class="section-num">07</span><h2>Keyboard Shortcuts Cheatsheet</h2></div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <div class="cheat-card-header ch-blue">Agent &amp; AI</div>
+      <ul>
+        <li><span class="desc">Open agent sidebar</span><kbd>Ctrl+Shift+A</kbd></li>
+        <li><span class="desc">New agent task</span><kbd>Ctrl+Shift+N</kbd></li>
+        <li><span class="desc">Accept agent change</span><kbd>Ctrl+Y</kbd></li>
+        <li><span class="desc">Reject agent change</span><kbd>Ctrl+N</kbd></li>
+        <li><span class="desc">Inline AI edit</span><kbd>Ctrl+I</kbd></li>
+        <li><span class="desc">AI explain selection</span><kbd>Ctrl+Shift+E</kbd></li>
+        <li><span class="desc">Switch model</span><kbd>Ctrl+Shift+M</kbd></li>
+        <li><span class="desc">Toggle Plan/Fast mode</span><kbd>Ctrl+Shift+P</kbd></li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-header ch-green">Running Code</div>
+      <ul>
+        <li><span class="desc">Run current file</span><kbd>F5</kbd></li>
+        <li><span class="desc">Run cell (# %%)</span><kbd>Ctrl+Enter</kbd></li>
+        <li><span class="desc">Run selection</span><kbd>Shift+Enter</kbd></li>
+        <li><span class="desc">Run &amp; advance cell</span><kbd>Alt+Enter</kbd></li>
+        <li><span class="desc">Open terminal</span><kbd>Ctrl+`</kbd></li>
+        <li><span class="desc">New terminal</span><kbd>Ctrl+Shift+`</kbd></li>
+        <li><span class="desc">Stop process</span><kbd>Ctrl+C</kbd></li>
+        <li><span class="desc">Start debugger</span><kbd>F5</kbd></li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-header ch-amber">Navigation</div>
+      <ul>
+        <li><span class="desc">Quick open file</span><kbd>Ctrl+P</kbd></li>
+        <li><span class="desc">Go to symbol</span><kbd>Ctrl+Shift+O</kbd></li>
+        <li><span class="desc">Go to definition</span><kbd>F12</kbd></li>
+        <li><span class="desc">Go to line</span><kbd>Ctrl+G</kbd></li>
+        <li><span class="desc">Command palette</span><kbd>Ctrl+Shift+P</kbd></li>
+        <li><span class="desc">Toggle file explorer</span><kbd>Ctrl+Shift+E</kbd></li>
+        <li><span class="desc">Switch editor tab</span><kbd>Ctrl+Tab</kbd></li>
+        <li><span class="desc">Go back</span><kbd>Alt+←</kbd></li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-header ch-purple">Editing</div>
+      <ul>
+        <li><span class="desc">Multi-cursor (click)</span><kbd>Alt+Click</kbd></li>
+        <li><span class="desc">Select all occurrences</span><kbd>Ctrl+Shift+L</kbd></li>
+        <li><span class="desc">Rename symbol</span><kbd>F2</kbd></li>
+        <li><span class="desc">Format document</span><kbd>Shift+Alt+F</kbd></li>
+        <li><span class="desc">Toggle comment</span><kbd>Ctrl+/</kbd></li>
+        <li><span class="desc">Move line up/down</span><kbd>Alt+↑/↓</kbd></li>
+        <li><span class="desc">Duplicate line</span><kbd>Shift+Alt+↓</kbd></li>
+        <li><span class="desc">Delete line</span><kbd>Ctrl+Shift+K</kbd></li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-header ch-cyan">Search &amp; Replace</div>
+      <ul>
+        <li><span class="desc">Find in file</span><kbd>Ctrl+F</kbd></li>
+        <li><span class="desc">Replace in file</span><kbd>Ctrl+H</kbd></li>
+        <li><span class="desc">Find in project</span><kbd>Ctrl+Shift+F</kbd></li>
+        <li><span class="desc">Replace in project</span><kbd>Ctrl+Shift+H</kbd></li>
+        <li><span class="desc">Next match</span><kbd>F3</kbd></li>
+        <li><span class="desc">Previous match</span><kbd>Shift+F3</kbd></li>
+      </ul>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-card-header ch-red">Panels &amp; Views</div>
+      <ul>
+        <li><span class="desc">Toggle sidebar</span><kbd>Ctrl+B</kbd></li>
+        <li><span class="desc">Toggle terminal panel</span><kbd>Ctrl+J</kbd></li>
+        <li><span class="desc">Problems panel</span><kbd>Ctrl+Shift+M</kbd></li>
+        <li><span class="desc">Source control</span><kbd>Ctrl+Shift+G</kbd></li>
+        <li><span class="desc">Extensions</span><kbd>Ctrl+Shift+X</kbd></li>
+        <li><span class="desc">Split editor</span><kbd>Ctrl+\</kbd></li>
+        <li><span class="desc">Zen mode</span><kbd>Ctrl+K Z</kbd></li>
+        <li><span class="desc">Settings</span><kbd>Ctrl+,</kbd></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S8 ══ -->
+<div class="section" id="s8">
+  <div class="section-header"><span class="section-num">08</span><h2>Python Setup for Scientific Work</h2></div>
+
+  <h3>Essential extensions to install first</h3>
+  <div class="cb"><div class="cb-head"><span class="lang">Extensions — install via Ctrl+Shift+X</span></div>
+  <pre><span class="cm"># Must-have for scientific Python</span>
+Python              <span class="cm"># ms-python.python — base Python support</span>
+Pylance             <span class="cm"># ms-python.vscode-pylance — type checking, IntelliSense</span>
+Jupyter             <span class="cm"># ms-toolsai.jupyter — notebooks + variable explorer</span>
+Jupyter Keymap      <span class="cm"># ms-toolsai.jupyter-keymap — familiar notebook shortcuts</span>
+
+<span class="cm"># Recommended</span>
+GitLens             <span class="cm"># eamodio.gitlens — advanced Git history</span>
+Black Formatter     <span class="cm"># ms-python.black-formatter — auto-format on save</span>
+autoDocstring       <span class="cm"># njpwerner.autodocstring — NumPy/Google docstrings</span>
+Rainbow CSV         <span class="cm"># mechatroner.rainbow-csv — view data files</span></pre></div>
+
+  <h3>Setting up your conda/venv environment</h3>
+  <div class="cb"><div class="cb-head"><span class="lang">Terminal</span></div>
+  <pre><span class="cm"># Option A — conda (recommended for scientific Python)</span>
+conda create -n myenv <span class="cy">python</span>=3.11
+conda activate myenv
+pip install mne numpy scipy matplotlib
+
+<span class="cm"># Option B — venv</span>
+python -m venv .venv
+<span class="kw">source</span> .venv/bin/activate    <span class="cm"># Linux/macOS</span>
+.venv\Scripts\activate       <span class="cm"># Windows</span>
+
+<span class="cm"># Then: Ctrl+Shift+P → "Python: Select Interpreter" → pick env</span></pre></div>
+
+  <h3>Recommended settings.json</h3>
+  <div class="cb"><div class="cb-head"><span class="lang">settings.json  (Ctrl+Shift+P → "Open User Settings JSON")</span></div>
+  <pre>{
+  <span class="str">"python.terminal.activateEnvironment"</span>: <span class="kw">true</span>,
+  <span class="str">"jupyter.sendSelectionToInteractiveWindow"</span>: <span class="kw">true</span>,
+  <span class="str">"jupyter.interactiveWindowMode"</span>: <span class="str">"perFile"</span>,
+  <span class="str">"editor.formatOnSave"</span>: <span class="kw">true</span>,
+  <span class="str">"python.formatting.provider"</span>: <span class="str">"black"</span>,
+  <span class="str">"python.analysis.typeCheckingMode"</span>: <span class="str">"basic"</span>,
+  <span class="str">"files.autoSave"</span>: <span class="str">"afterDelay"</span>,
+  <span class="str">"files.autoSaveDelay"</span>: <span class="num">1000</span>
+}</pre></div>
+
+  <h3>Debugger setup (replaces Spyder's F12)</h3>
+  <div class="cb"><div class="cb-head"><span class="lang">.vscode/launch.json  — create this in your project root</span></div>
+  <pre>{
+  <span class="str">"version"</span>: <span class="str">"0.2.0"</span>,
+  <span class="str">"configurations"</span>: [{
+    <span class="str">"name"</span>: <span class="str">"Python: Current File"</span>,
+    <span class="str">"type"</span>: <span class="str">"debugpy"</span>,
+    <span class="str">"request"</span>: <span class="str">"launch"</span>,
+    <span class="str">"program"</span>: <span class="str">"${file}"</span>,
+    <span class="str">"console"</span>: <span class="str">"integratedTerminal"</span>,
+    <span class="str">"justMyCode"</span>: <span class="kw">true</span>,
+    <span class="str">"env"</span>: {<span class="str">"PYTHONPATH"</span>: <span class="str">"${workspaceFolder}"</span>}
+  }]
+}</pre></div>
+  <p>After this, <kbd style="font-family:var(--font-code);font-size:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:2px 7px">F9</kbd> sets breakpoints inline, <kbd style="font-family:var(--font-code);font-size:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:2px 7px">F5</kbd> launches the debugger.</p>
+</div>
+
+<!-- ══ S9 ══ -->
+<div class="section" id="s9">
+  <div class="section-header"><span class="section-num">09</span><h2>Agent Prompting Guide</h2></div>
+  <p>The quality of agent output is almost entirely determined by how you phrase the task. These patterns work well for scientific Python.</p>
+
+  <h3>Effective prompt examples</h3>
+
+  <div class="prompt-box"><div class="prompt-label">✦ Refactoring</div><p>"Refactor pseudoMRI.py to replace all bare print() calls with logging.info() and logging.debug(). Use the existing logger = logging.getLogger(__name__) pattern. Do not change any scientific logic. Show me a diff before applying."</p></div>
+  <div class="prompt-box"><div class="prompt-label">✦ New function</div><p>"In riemannsep.py, add a method called export_denoising_matrix() that saves self._D as a .npy file and writes metadata (threshold, mode, timestamp) to a companion JSON. Follow the existing code style. Add a NumPy-style docstring."</p></div>
+  <div class="prompt-box"><div class="prompt-label">✦ Debugging</div><p>"This function raises a LinAlgError on ill-conditioned covariance matrices. Find the cause, add a regularisation fallback using np.eye(n) * 1e-6 * np.trace(C) / n, add a logger.warning when it fires. Show me the fix before applying."</p></div>
+  <div class="prompt-box"><div class="prompt-label">✦ Explaining unfamiliar code</div><p>"Explain what the _jacobi_ajd function does, in plain language suitable for a signal processing researcher who knows matrix algebra but has not seen joint diagonalisation before. Include a worked 2x2 example."</p></div>
+  <div class="prompt-box"><div class="prompt-label">✦ Writing tests</div><p>"Write pytest unit tests for the _riemannian_whitening function. Test that: (1) W @ C @ W.T is approximately identity, (2) function handles near-singular C without raising, (3) output shape matches input. Use np.testing.assert_allclose."</p></div>
+  <div class="prompt-box"><div class="prompt-label">✦ Performance</div><p>"Profile the apply() method using cProfile on MNE sample data. Identify the top 3 bottlenecks. Propose vectorised numpy alternatives for any Python loops. Show proposed changes before applying."</p></div>
+
+  <h3>Prompting rules</h3>
+  <table class="tbl">
+    <thead><tr><th>Do</th><th>Avoid</th></tr></thead>
+    <tbody>
+      <tr><td>Be specific about file and function names</td><td>Vague: "fix the bug in my code"</td></tr>
+      <tr><td>Say "show me the diff before applying" for risky changes</td><td>Letting the agent overwrite without review</td></tr>
+      <tr><td>Specify: "follow existing code style in file"</td><td>Letting the agent invent its own style</td></tr>
+      <tr><td>Say "do not alter the scientific logic"</td><td>Open-ended tasks on critical pipelines</td></tr>
+      <tr><td>Use Plan Mode for multi-file changes</td><td>Fast Mode for large refactors</td></tr>
+      <tr><td>Switch to Claude Sonnet for MNE/MEG-specific tasks</td><td>Staying on Gemini if it misunderstands domain concepts</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ S10 ══ -->
+<div class="section" id="s10">
+  <div class="section-header"><span class="section-num">10</span><h2>Scientific Python Tips (MNE / NumPy / SciPy)</h2></div>
+
+  <div class="python-tips">
+    <div class="ptip"><h4>Interactive plots (Spyder-style)</h4><p>Use <code>%matplotlib widget</code> in a Jupyter notebook for interactive, zoomable plots. Use <code>%matplotlib inline</code> for static plots. In .py files, add <code>plt.show(block=True)</code> to keep the window open.</p></div>
+    <div class="ptip"><h4>Variable inspector</h4><p>In .ipynb notebooks, open the Jupyter Variables panel (View → Jupyter Variables). In .py files, set a breakpoint and inspect variables in the debug Watch panel — closest to Spyder's variable explorer.</p></div>
+    <div class="ptip"><h4>Spyder-style cells in .py files</h4><p>The <code># %%</code> cell marker still works. Run cells with <code>Ctrl+Enter</code>. Open the Jupyter Interactive Window (<code>Shift+Enter</code> on selection) for an IPython-like REPL tied to your .py file.</p></div>
+    <div class="ptip"><h4>Large array inspection</h4><p>Add a temporary cell: <code># %% debug</code> with <code>print(arr.shape, arr.dtype, arr.min(), arr.max())</code>. Or ask the agent: "add a debug cell after line 47 that prints shape and stats of X".</p></div>
+    <div class="ptip"><h4>MNE interactive plots</h4><p>MNE interactive plots need a Qt backend. Add <code>import matplotlib; matplotlib.use('Qt5Agg')</code> at the top, or set <code>"jupyter.themeMatplotlibPlots": true</code> in settings for notebook rendering.</p></div>
+    <div class="ptip"><h4>Conda env in terminal</h4><p>If conda env doesn't activate automatically, add to settings.json: <code>"python.terminal.activateEnvInCurrentTerminal": true</code>. Or manually run <code>conda activate your_env</code> in the integrated terminal.</p></div>
+    <div class="ptip"><h4>Agent for data exploration</h4><p>Ask: "add a cell that loads the .fif file, prints info, and plots the first 10 seconds of gradiometer data". The agent will write and run it — faster than typing it yourself.</p></div>
+    <div class="ptip"><h4>Import errors after agent install</h4><p>If the agent installed a package but import fails, it likely used the wrong env. Check with <code>which python</code> in terminal and verify it matches the selected interpreter at the bottom status bar.</p></div>
+  </div>
+</div>
+
+<!-- ══ S11 ══ -->
+<div class="section" id="s11">
+  <div class="section-header"><span class="section-num">11</span><h2>Safety, Gotchas &amp; Limitations</h2></div>
+
+  <div class="callout c-danger"><span class="callout-icon">🔴</span><span><strong>Security vulnerability (Nov 2025):</strong> Mindgard research flagged a potential backdoor attack vector in Antigravity. Google is patching. Keep the IDE updated, use Review-Driven mode on sensitive codebases, and do not open untrusted project folders.</span></div>
+  <div class="callout c-warn"><span class="callout-icon">⚠</span><span><strong>Virtual environment confusion:</strong> The agent's first instinct is to install packages globally. Always set the Python interpreter before running any agent task. Keep a <code>requirements.txt</code> in the project root — the agent will respect it.</span></div>
+  <div class="callout c-warn"><span class="callout-icon">⚠</span><span><strong>Rate limit cooling:</strong> Gemini 3.1 Pro limits refresh every 5 hours. Keep Claude Sonnet as a fallback. Heavy multi-agent Manager View sessions drain limits faster than single-agent work.</span></div>
+  <div class="callout c-warn"><span class="callout-icon">⚠</span><span><strong>Agent overconfidence on scientific code:</strong> The agent may confidently refactor MNE-specific code incorrectly. Always specify your MNE version in prompts for version-sensitive API calls.</span></div>
+  <div class="callout c-info"><span class="callout-icon">ℹ</span><span><strong>No paid tiers yet:</strong> As of May 2026, bring-your-own-API-key and paid plans are not supported. You cannot use your own Anthropic or Google AI credits inside Antigravity.</span></div>
+  <div class="callout c-tip"><span class="callout-icon">✦</span><span><strong>Undo is your friend:</strong> Every agent change can be undone with Ctrl+Z or from the Artifacts panel → "Revert this change". Antigravity also auto-creates a Git checkpoint before any multi-file agent operation in Plan Mode.</span></div>
+</div>
+
+<!-- ══ S12 ══ -->
+<div class="section" id="s12">
+  <div class="section-header"><span class="section-num">12</span><h2>Quick Reference Summary</h2></div>
+
+  <h3>Day-1 setup checklist</h3>
+  <div class="cb"><div class="cb-head"><span class="lang">Checklist</span></div>
+  <pre><span class="cm">□</span> Download from antigravity.google
+<span class="cm">□</span> Choose Agent-Assisted mode during install
+<span class="cm">□</span> Sign in with Google account
+<span class="cm">□</span> Install extensions: Python, Pylance, Jupyter, Black Formatter
+<span class="cm">□</span> Open project folder
+<span class="cm">□</span> Set Python interpreter (Ctrl+Shift+P → "Python: Select Interpreter")
+<span class="cm">□</span> Create .vscode/launch.json for debugger
+<span class="cm">□</span> Set Terminal Policy to "Agent Decides"
+<span class="cm">□</span> Test: run a # %% cell with Ctrl+Enter
+<span class="cm">□</span> Test: ask the agent "explain this function" on any function</pre></div>
+
+  <h3>5 things Antigravity does that Spyder cannot</h3>
+  <table class="tbl">
+    <thead><tr><th>#</th><th>Capability</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Multi-file autonomous refactoring</td><td>"Replace all print() with logging across the entire project"</td></tr>
+      <tr><td>2</td><td>Self-correcting agent loops</td><td>Writes code → runs it → sees error → fixes → reruns, automatically</td></tr>
+      <tr><td>3</td><td>Browser automation for testing</td><td>Agent launches your Flask app, clicks through UI, reports what broke</td></tr>
+      <tr><td>4</td><td>Parallel agents in Manager View</td><td>Agent A writes tests while Agent B refactors the module simultaneously</td></tr>
+      <tr><td>5</td><td>Structured Artifacts trail</td><td>Every agent task leaves a reviewable log of reasoning, diffs, and outputs</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3 things Spyder still does better</h3>
+  <table class="tbl">
+    <thead><tr><th>Spyder strength</th><th>Antigravity workaround</th></tr></thead>
+    <tbody>
+      <tr><td>Native variable explorer with array viewer</td><td>Jupyter extension (close but not identical)</td></tr>
+      <tr><td>Integrated IPython REPL tied to editor namespace</td><td>Jupyter Interactive Window (needs extra setup)</td></tr>
+      <tr><td>Zero-config scientific Python out of the box</td><td>Requires ~15 min of extension setup first time</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="doc-footer">
+  <p>Google Antigravity Crash Course · Compiled May 2026 · For Spyder → Antigravity migration · Scientific Python / MEG / TrackNeuro workflows</p>
+</div>
+
+</div>
+</body>
+</html>
